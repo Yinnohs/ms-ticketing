@@ -16,5 +16,9 @@ UserRouter.post('/user/signout', (req:Request,  res: Response)=>{
 })
 
 UserRouter.post('users/signup',(req:Request,  res: Response)=>{
-    
+    const {email , password} = req.body
+
+    if(!email || !password){
+        return 
+    }
 })
