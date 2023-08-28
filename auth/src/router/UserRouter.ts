@@ -1,4 +1,8 @@
 import {Request, Response, Router} from 'express'
+import { body, validationResult } from 'express-validator'
+import { CREATED } from '../utils'
+import { ResponseObject, DatabaseConnectionError, RequestValidationError } from '../types'
+
 
 export const UserRouter = Router()
 
@@ -15,10 +19,45 @@ UserRouter.post('/user/signout', (req:Request,  res: Response)=>{
 
 })
 
-UserRouter.post('users/signup',(req:Request,  res: Response)=>{
-    const {email , password} = req.body
 
-    if(!email || !password){
-        return 
+
+
+
+const signupValidations = [
+    body('email')
+    .trim()
+    .isEmpty()
+    .withMessage('Email must be provided')
+    .isEmail()
+    .withMessage('Email must be valid'),
+    
+    body('password')
+    .trim()
+    .isEmpty()
+    .withMessage('Password must be provided')
+    .isLength({min: 4, max: 20})
+    .withMessage("Password must be between 4 and 20 characters")
+]
+
+UserRouter.post('users/signup', signupValidations, (req:Request,  res: Response)=>{
+    const errors = validationResult(req)
+    if(!errors.isEmpty()){
+        throw new RequestValidationError(errors.array())
     }
+
+    const {email , password} = req.body
+    
+
+    // TODO:  create sign up functionality 
+    console.log(' creating user ');
+    
+    const response: ResponseObject = {
+        message: 'CREATED',
+        data: {},
+        errors:null,
+        status: CREATED
+    }
+
+    res.status(CREATED).json(response)
+
 })
