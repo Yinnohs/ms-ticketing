@@ -1,22 +1,13 @@
 import { ValidationError } from "express-validator";
+import { INTERNAL_SERVER_ERROR, INVALID_REQUEST } from "../utils";
 
-export class  RequestValidationError extends Error{
-    constructor(public errors: ValidationError[]){
-        super()
-        // we need to do this only because we are extending a built in class
-        Object.setPrototypeOf(this, RequestValidationError.prototype)
-
-    }
-
+export type CommonErrorStructure = {
+    message:string,
+    field?:string
 }
 
-
-
-export class DatabaseConnectionError extends Error{
-    reason = "Error connecting to the database"
-    constructor(){
-        super()
-
-        Object.setPrototypeOf(this, DatabaseConnectionError.prototype)
-    }
+export interface ErrorResponse{
+    reason?:string
+    statusCode:number
+    serializeError(): CommonErrorStructure[]
 }
