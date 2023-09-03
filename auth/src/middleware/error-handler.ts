@@ -1,20 +1,18 @@
 import { NextFunction, Request, Response, response } from "express";
-import { DatabaseConnectionError, RequestValidationError, ResponseObject } from "../types";
-import { INTERNAL_SERVER_ERROR, INVALID_REQUEST } from "../utils";
+import {ErrorResponse, ResponseObject } from "../types";
 
 
-export const ErrorHandlerMiddleware = (err: Error, req:Request,res:Response, next: NextFunction) => {
+export const ErrorHandlerMiddleware = (err: ErrorResponse, req:Request,res:Response, next: NextFunction) => {
     if(!err){
         return next()
     }
 
-    let statusCode = INVALID_REQUEST
-
     const response:ResponseObject = {
         data: null,
-        errors: [{message: "Unhandle error"}],
-        message: err.message,
-        status: 500
+        errors: err.serializeError(),
+        message: err.reason || '',
+        status: err.statusCode
     }
-    res.status(statusCode).json(response)
+    
+    res.status(err.statusCode).json(response)
 }

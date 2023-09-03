@@ -1,7 +1,8 @@
 import {Request, Response, Router} from 'express'
 import { body, validationResult } from 'express-validator'
 import { CREATED } from '../utils'
-import { ResponseObject, DatabaseConnectionError, RequestValidationError } from '../types'
+import { ResponseObject} from '../types'
+import { RequestValidationError } from '../errors'
 
 
 export const UserRouter = Router()
@@ -59,5 +60,4 @@ UserRouter.post('users/signup', signupValidations, (req:Request,  res: Response)
     }
 
     res.status(CREATED).json(response)
-
 })
