@@ -1,45 +1,57 @@
 import { validationResult } from "express-validator";
-import { RequestValidationError } from "../errors";
+import { BadRequestError, DatabaseExecutionError, RequestValidationError } from "../errors";
 import { CreateUserDTO, ResponseObject } from "../types";
-import { BAD_REQUEST, CREATED } from "../utils";
+import { BAD_REQUEST, CREATED, INTERNAL_SERVER_ERROR } from "../utils";
 import { Request, Response } from "express";
 import { UserService } from "../services";
 
 class UserController {
 	static async signup(req: Request, res: Response) {
-		const errors = validationResult(req);
+		try {
+			const errors = validationResult(req);
 
-		if (!errors.isEmpty()) {
-			throw new RequestValidationError(errors.array());
-		}
+			if (!errors.isEmpty()) {
+				throw new RequestValidationError(errors.array());
+			}
 
-		const userData: CreateUserDTO = req.body;
+			const userData: CreateUserDTO = req.body;
 
-		const userAllreadyExist = await UserService.checkEmailIsTaken(userData.email)
+			const userAllreadyExist = await UserService.checkEmailIsTaken(userData.email)
 
-		if (userAllreadyExist) {
+			if (userAllreadyExist) {
+				throw new BadRequestError("email allready in use")
+			}
+
+			const savedUser = await UserService.createUser(userData)
+
+			if(!savedUser){
+				throw new DatabaseExecutionError("Something bad ocurred While creating the user")
+			}
+
+			savedUser.password = "";
+
 			const response: ResponseObject = {
-				message: "Email already used",
-				data: userAllreadyExist,
-				errors: [{ message: "Email was already use", field: "email" }],
-				status: BAD_REQUEST,
+				message: "CREATED",
+				data: savedUser,
+				errors: null,
+				status: CREATED,
 			};
 
-			return res.status(BAD_REQUEST).json(response);
+			res.status(CREATED).json(response);
+		} catch (error) {
+			
+			console.log(error)
+
+			const response: ResponseObject = {
+				message: "An unhandle error ocurred",
+				data: null,
+				errors: [],
+				status: INTERNAL_SERVER_ERROR,
+			};
+
+			res.send(INTERNAL_SERVER_ERROR).json(response)
 		}
-
-		const savedUser = await UserService.createUser(userData)
-
-		savedUser.password = "";
-
-		const response: ResponseObject = {
-			message: "CREATED",
-			data: savedUser,
-			errors: null,
-			status: CREATED,
-		};
-
-		res.status(CREATED).json(response);
+		
 	}
 }
 
