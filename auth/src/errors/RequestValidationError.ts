@@ -1,12 +1,12 @@
 import { ValidationError } from "express-validator";
 import { CommonErrorStructure, ErrorResponse } from "../types";
-import { INVALID_REQUEST } from "../utils";
+import { BAD_REQUEST } from "../utils";
 
 export class RequestValidationError extends Error implements ErrorResponse {
-	statusCode: number = INVALID_REQUEST;
+	statusCode: number = BAD_REQUEST;
 	constructor(public errors: ValidationError[]) {
 		super();
-		this.statusCode = INVALID_REQUEST;
+		this.statusCode = BAD_REQUEST;
 		// we need to do this only because we are extending a built in class
 		Object.setPrototypeOf(this, RequestValidationError.prototype);
 	}

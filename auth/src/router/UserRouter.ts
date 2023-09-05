@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { body, validationResult } from "express-validator";
-import { CREATED } from "../utils";
+import { BAD_REQUEST, CREATED } from "../utils";
 import { CreateUserDTO, ResponseObject } from "../types";
 import { RequestValidationError } from "../errors";
 import { User } from "../models";
@@ -8,7 +8,9 @@ import { User } from "../models";
 export const UserRouter = Router();
 
 // hardcoded route
-UserRouter.get("/users/currentUser", (req: Request, res: Response) => {
+UserRouter.get("/users/currentUser", async(req: Request, res: Response) => {
+
+
 	res.status(200).send("user reitrieved");
 });
 
@@ -35,23 +37,5 @@ const signupValidations = [
 UserRouter.post(
 	"users/signup",
 	signupValidations,
-	async (req: Request, res: Response) => {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			throw new RequestValidationError(errors.array());
-		}
-
-		const userData: CreateUserDTO = req.body;
-
-		const savedUser = await User.create(User.build(userData));
-
-		const response: ResponseObject = {
-			message: "CREATED",
-			data: savedUser,
-			errors: null,
-			status: CREATED,
-		};
-
-		res.status(CREATED).json(response);
-	},
+	
 );
