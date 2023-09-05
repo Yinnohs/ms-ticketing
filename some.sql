@@ -1,1 +1,1 @@
-begin; update ikea_erp.tienda set direccionip = '192.168.23.195', puerto = '1399', webport = '8380' where siglas = 'GC';
+select migracion.crearterminal('NACHO LANZAROTE TERMINAL', '8C-8C-AA-46-91-94', 'CAJAS', null, null, null, null, 'BITBOXER');

@@ -5,9 +5,7 @@ import { UserController } from "../controller";
 export const UserRouter = Router();
 
 // hardcoded route
-UserRouter.get("/users/currentUser", async(req: Request, res: Response) => {
-
-
+UserRouter.get("/users/currentUser", async (req: Request, res: Response) => {
 	res.status(200).send("user reitrieved");
 });
 
@@ -31,8 +29,4 @@ const signupValidations = [
 		.withMessage("Password must be between 4 and 20 characters"),
 ];
 
-UserRouter.post(
-	"users/signup",
-	signupValidations,
-	UserController.signup
-);
+UserRouter.post("users/signup", signupValidations, UserController.signup);
