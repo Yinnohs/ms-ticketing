@@ -1,9 +1,6 @@
 import { Request, Response, Router } from "express";
-import { body, validationResult } from "express-validator";
-import { BAD_REQUEST, CREATED } from "../utils";
-import { CreateUserDTO, ResponseObject } from "../types";
-import { RequestValidationError } from "../errors";
-import { User } from "../models";
+import { body } from "express-validator";
+import { UserController } from "../controller";
 
 export const UserRouter = Router();
 
@@ -37,5 +34,5 @@ const signupValidations = [
 UserRouter.post(
 	"users/signup",
 	signupValidations,
-	
+	UserController.signup
 );
