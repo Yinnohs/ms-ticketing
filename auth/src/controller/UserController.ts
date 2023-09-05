@@ -1,1 +1,1 @@
-export const UserController = {}
+export const UserController = {};

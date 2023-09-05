@@ -1,0 +1,1 @@
+begin; update ikea_erp.tienda set direccionip = '192.168.23.195', puerto = '1399', webport = '8380' where siglas = 'GC';

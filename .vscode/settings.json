@@ -1,0 +1,10 @@
+{
+	"editor.codeActionsOnSave":{
+		"source.organizeImports.rome": true
+	},
+
+    "[javascript, typescript]": {
+        "editor.defaultFormatter": "rome.rome"
+    }
+
+}

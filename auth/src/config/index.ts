@@ -1,1 +1,1 @@
-export * from './InitialConfiguration'
+export * from "./InitialConfiguration";
