@@ -42,8 +42,10 @@ UserSchema.methods.findByEmail = function (email: string) {};
 
 UserSchema.pre<UserDocument>("save", async function (next) {
 	if (this.isModified("password")) {
-		this.password = await hashPassword(this.password);
+		const hashedPassword = await hashPassword(this.password);
+		this.set('password', hashedPassword) 
 	}
+	next()
 });
 
 const User = mongoose.model<UserDocument, UserModel>("User", UserSchema);
